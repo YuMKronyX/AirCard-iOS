@@ -1,0 +1,30 @@
+name: Build AirCard iOS IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Make build scripts executable
+        run: chmod +x build-ipa.sh build-ios.sh
+
+      - name: Build IPA
+        run: ./build-ipa.sh
+
+      - name: Upload IPA
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AirCard-iOS-IPA
+          path: |
+            build/*.ipa
+            *.ipa
